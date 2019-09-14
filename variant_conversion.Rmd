@@ -1,0 +1,20 @@
+---
+title: "parse_genomic_info"
+author: "Ehsan Ullah"
+date: "September 12, 2019"
+output: html_document
+---
+
+```{r}
+
+library(tidyverse)
+library(stringr)
+
+variants %>% 
+  mutate(Chromosomal.Variant = as.character(Chromosomal.Variant)) %>%
+  mutate(chr=str_extract(Chromosomal.Variant, "\\d[1-9]\\b")) %>% 
+  mutate(start=str_extract(Chromosomal.Variant, "\\d+:g.\\d+.+"))
+
+
+
+```
