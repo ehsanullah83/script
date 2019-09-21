@@ -9,12 +9,14 @@ output: html_document
 
 library(tidyverse)
 library(stringr)
-
-variants %>% 
+library(dplyr)
+variants2 <- variants %>% 
   mutate(Chromosomal.Variant = as.character(Chromosomal.Variant)) %>%
-  mutate(chr=str_extract(Chromosomal.Variant, "\\d[1-9]\\b")) %>% 
-  mutate(start=str_extract(Chromosomal.Variant, "\\d+:g.\\d+.+"))
+  mutate(chr=str_extract(Chromosomal.Variant, "\\d[1-9]\\b")) %>%
+  mutate(position=str_extract(Chromosomal.Variant, "g.\\d+")) %>% 
+  mutate(var=str_extract(Chromosomal.Variant, "[A-Z](?:\\>)[A-Z]")) %>% 
+  separate(var, c("Ref", "Alt"), sep=">")
 
-
+write_tsv(variants2, "variants.tsv")
 
 ```
