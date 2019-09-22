@@ -1,8 +1,21 @@
 
-# fix the bed file by removing "chr"
+# modify the bed file by removing "chr"
 sed 's/^chr//' /data/ullahe2/crx_enhancer_phase-II/Crx_goodpeaks_mm9.narrowPeak_liftover_human_grch37.bed > /data/ullahe2/crx_enhancer_phase-II/Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1.bed
 
 
 module load bedtools
+module load bcftools
 bedtools intersect -wa -a /fdb/gnomad/release-2.1/vcf/genomes/gnomad.genomes.r2.1.sites.vcf.bgz -b /data/ullahe2/crx_enhancer_phase-II/Crx_goodpeaks_mm9.narrowPeak_liftover_human_grch37.bed -header > /data/ullahe2/crx_enhancer_phase-II/Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_gnomAD_intersect.vcf
+
+
+#sort the bed file by using linux sort function.
+sort -k 1,1 -k2,2n Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1.bed > Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_sorted.bed
+#bgzip bed file.
+bgzip Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_sorted.bed
+#index bed file.
+tabix -p bed Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_sorted.bed.gz
+#bgzip vcf file
+bgzip Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_gnomAD_intersect.vcf
+#index vcf file
+tabix -p vcf Crx_goodpeaks_mm9.narrowPeak_human_grch37_v1_gnomAD_intersect.vcf.gz
 
